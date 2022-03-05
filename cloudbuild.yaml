@@ -1,0 +1,27 @@
+steps:
+- name: 'node:16'
+  dir: 'shared'
+  entrypoint: 'npm'
+  args: ['install']
+  env:
+  - 'PROJECT_ID=$PROJECT_ID'
+- name: 'node:16'
+  dir: 'ingestion/batch'
+  entrypoint: 'npm'
+  args: ['install']
+  env:
+  - 'PROJECT_ID=$PROJECT_ID'
+- name: 'node:16'
+  dir: 'shared'
+  entrypoint: 'npm'
+  args: ['run', 'cloudtest']
+  env:
+  - 'PROJECT_ID=$PROJECT_ID'
+- name: 'node:16'
+  dir: 'ingestion/batch'
+  entrypoint: 'npm'
+  args: ['run', 'cloudtest']
+  env:
+  - 'PROJECT_ID=$PROJECT_ID'
+options:
+ logging: CLOUD_LOGGING_ONLY
