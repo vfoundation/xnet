@@ -1,0 +1,303 @@
+imports:
+  - name: common.py
+    path: common/common.py
+  - name: default.py
+    path: common/default.py
+  - name: password.py
+    path: common/password.py
+  - name: path_utils.jinja
+    path: common/path_utils.jinja
+  - name: vm_instance.py
+    path: common/vm_instance.py
+  - name: cluster.py
+    path: cluster.py
+  - name: cloud_function.py
+    path: cloud_function.py
+  - name: deploy_ds_api.py
+    path: deploy_ds_api.py
+  - name: deploy_ui_cloud_run.py
+    path: deploy_ui_cloud_run.py
+  - name: waiter.jinja
+    path: waiter.jinja
+
+info:
+  version: '1.0'
+  title: Datashare Template
+
+required:
+  - zone
+  - machineType
+  - network
+  - bootDiskType
+  - bootDiskSizeGb
+  - gceServiceAccount
+  - input_oauthClientId
+  - input_dataProducers
+  - input_apiDomainName
+
+properties:
+  zone:
+    type: string
+    default: us-central1-a
+    x-googleProperty:
+      type: GCE_ZONE
+      gceZone:
+        whitelistedZones:
+        - asia-east1-a
+        - asia-east1-b
+        - asia-east1-c
+        - asia-southeast1-a
+        - asia-southeast1-b
+        - asia-southeast1-c
+        - europe-west1-b
+        - europe-west1-c
+        - europe-west1-d
+        - europe-west4-a
+        - europe-west4-b
+        - europe-west4-c
+        - us-central1-a
+        - us-central1-b
+        - us-central1-c
+        - us-central1-f
+        - us-east1-b
+        - us-east1-c
+        - us-east1-d
+        - us-east4-a
+        - us-east4-b
+        - us-east4-c
+        - us-west1-a
+        - us-west1-b
+        - us-west1-c
+  sourceImage:
+    type: string
+    enum:
+      - '0'
+    default: '0'
+  machineType:
+    type: string
+    default: g1-small
+    x-googleProperty:
+      type: GCE_MACHINE_TYPE
+      zoneProperty: zone
+      gceMachineType:
+        minCpu: 1
+        minRamGb: 0.6000000238418579
+  network:
+    type: array
+    default: [default]
+    minItems: 1
+    maxItems: 1
+    x-googleProperty:
+      type: GCE_NETWORK
+      gceNetwork:
+        allowSharedVpcs: True
+        machineTypeProperty: machineType
+  subnetwork:
+    type: array
+    minItems: 1
+    maxItems: 1
+    x-googleProperty:
+      type: GCE_SUBNETWORK
+      zoneProperty: zone
+      gceSubnetwork:
+        networkProperty: network
+  externalIP:
+    type: array
+    default: [EPHEMERAL]
+    minItems: 1
+    maxItems: 1
+    x-googleProperty:
+      type: GCE_EXTERNAL_IP
+      gceExternalIp:
+        networkProperty: network
+        notConfigurable: False
+        allowStaticIps: False
+  canIpForward:
+    type: string
+    enum:
+      - 'On'
+      - 'Off'
+    default: 'Off'
+  bootDiskType:
+    type: string
+    default: pd-standard
+    x-googleProperty:
+      type: GCE_DISK_TYPE
+      zoneProperty: zone
+  bootDiskSizeGb:
+    type: integer
+    default: 10
+    minimum: 10
+    maximum: 10000
+    x-googleProperty:
+      type: GCE_DISK_SIZE
+      gceDiskSize:
+        diskTypeProperty: bootDiskType
+  enableTcp80:
+    type: boolean
+    default: False
+    x-googleProperty:
+      type: GCE_FIREWALL
+      gceFirewall:
+        networkProperty: network
+  tcp80SourceRanges:
+    type: string
+    x-googleProperty:
+      type: GCE_FIREWALL_RANGE
+      gceFirewallRange:
+        firewallProperty: enableTcp80
+  input_adminEmail:
+    type: string
+    default: user@example.com
+  gceServiceAccount:
+    type: string
+    # pattern: "[.]*"
+    x-googleProperty:
+      type: IAM_SERVICE_ACCOUNT
+      iamServiceAccount:
+        roles:
+        - roles/container.admin
+        - roles/serviceusage.serviceUsageAdmin
+        - roles/storage.admin
+        - roles/runtimeconfig.admin
+        - roles/run.admin
+        - roles/run.serviceAgent
+        - roles/cloudfunctions.developer
+        - roles/container.clusterAdmin
+        - roles/container.viewer
+        #- roles/iam.serviceAccounts.create causes an error during deployment as it is not allowed.
+  input_datashareGithubReleaseVersion:
+    type: string
+    default: v0.7.2
+    enum:
+      - 'master'
+      - 'v0.7.2'
+      - 'v0.7.1'
+  input_cloudFunctionRegion:
+    type: string
+    default: us-central1
+    enum: 
+      - asia-east2
+      - asia-south1
+      - asia-northeast1
+      - asia-northeast2
+      - asia-northeast3
+      - asia-southeast2
+      - australia-southeast1
+      - europe-central2        
+      - europe-west1
+      - europe-west2
+      - europe-west3
+      - europe-west4
+      - europe-west6
+      - northamerica-northeast1
+      - southamerica-east1
+      - us-central1
+      - us-east1
+      - us-east4
+      - us-west1
+      - us-west2
+      - us-west3
+      - us-west4
+  input_gcpRegion:
+    type: string
+    default: us-central1
+    enum:
+      - asia-east1
+      - asia-southeast1
+      - europe-west1
+      - europe-west4
+      - us-central1
+      - us-east1
+      - us-east4
+      - us-west1
+  input_storageBucketLocation:
+    type: string
+    default: US
+    enum:
+      - 'ASIA'
+      - 'EU'
+      - 'US'
+  useRuntimeConfigWaiter:
+    type: boolean
+    default: True
+  deployApiToGke:
+    type: boolean
+    default: True
+  #isPrivateGkeCluster
+  #  type: boolean
+  #  default: False
+  input_gkeZone:
+    type: string
+    default: us-central1-a
+    enum: 
+      - asia-east1-a
+      - asia-east1-b
+      - asia-east1-c
+      - asia-southeast1-a
+      - asia-southeast1-b
+      - asia-southeast1-c
+      - europe-west1-b
+      - europe-west1-c
+      - europe-west1-d
+      - europe-west4-a
+      - europe-west4-b
+      - europe-west4-c
+      - us-central1-a
+      - us-central1-b
+      - us-central1-c
+      - us-central1-f
+      - us-east1-b
+      - us-east1-c
+      - us-east1-d
+      - us-east4-a
+      - us-east4-b
+      - us-east4-c
+      - us-west1-a
+      - us-west1-b
+      - us-west1-c
+  serviceAccounts:
+    type: array
+    default:
+      - email: default
+        scopes:
+          - https://www.googleapis.com/auth/cloud.useraccounts.readonly
+          - https://www.googleapis.com/auth/devstorage.read_only
+          - https://www.googleapis.com/auth/logging.write
+    items:
+      type: object
+      required:
+      - email
+      - scopes
+      properties:
+        email:
+          type: string
+        scopes:
+          description: Scopes to be made available for this service account
+          type: array
+  input_oauthClientId:
+    type: string
+  input_dataProducers:
+    type: string
+  input_apiDomainName:
+    type: string
+  input_uiDomainName:
+    type: string
+  # input_apiStaticIp:
+  #  type: string
+
+outputs:
+  deployment:
+    type: string
+  project:
+    type: string
+  vmId:
+    type: string
+  vmExternalIP:
+    type: string
+  vmInternalIP:
+    type: string
+  vmName:
+    type: string
+  vmSelfLink:
+    type: string
