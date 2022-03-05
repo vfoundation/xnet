@@ -1,0 +1,7 @@
+{
+  "defaultDeploymentType": "SINGLE_VM",
+  "imageName": "gcp-financial-services-debian-datashare-202020817",
+  "projectId": "gcp-financial-services-public",
+  "templateName": "nonexistent_template",
+  "useSolutionPackage": true
+}
