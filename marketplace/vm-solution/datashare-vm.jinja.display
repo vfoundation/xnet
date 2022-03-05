@@ -1,0 +1,287 @@
+description:
+  author:
+    title: Google Cloud Platform Financial Services Team
+    descriptionHtml: "Google Cloud Platform Financial Services team provides solutions for the financial services industry.\n"
+    shortDescription: Google Cloud Platform Financial Services team provides solutions for the financial services industry.
+    url: https://github.com/GoogleCloudPlatform/datashare-toolkit/tree/master#datashare-toolkit
+  descriptionHtml: The Datashare solution allows you to quickly ingest large volumes of data and share it with your customers.
+  logo: '@media/datashare-color-image-150px-v1.png'
+  tagline: Ingest, entitle, share large volumes of data.
+  title: Datashare
+  url: https://github.com/GoogleCloudPlatform/datashare-toolkit/tree/master#datashare-toolkit
+  version: '0.6.8'
+  eulaUrl: https://raw.githubusercontent.com/GoogleCloudPlatform/datashare-toolkit/ecada698551d3022ed12afbabba5e5eae43dfb03/LICENSE.txt
+  softwareGroups:
+  - type: SOFTWARE_GROUP_OS
+    software:
+    - title: Debian
+      version: v20200714 LTS
+  - software:
+    - title: Datashare
+      version: 0.6.8
+    - title: Cloud Run on GKE
+      version: 1.16
+  documentations:
+  - title: Prerequisities
+    url: https://github.com/GoogleCloudPlatform/datashare-toolkit/tree/master/marketplace/PREREQUISITES.md
+    description: You must fulfill the prerequisites before you launch this solution.
+    destinations:
+    - DESTINATION_CONFIGURATION
+  - title: Getting Started
+    url: https://github.com/GoogleCloudPlatform/datashare-toolkit/tree/master
+    description: Checkout our Github repository documentation to learn more
+    destinations:
+    - DESTINATION_POST_DEPLOY
+  - title: Datashare Ingestion Documentation
+    url: https://github.com/GoogleCloudPlatform/datashare-toolkit/tree/master/ingestion
+    description: Learn how to use Datashare batch ingestion
+    destinations:
+    - DESTINATION_POST_DEPLOY
+  - title: Datashare UI Documentation
+    url: https://github.com/GoogleCloudPlatform/datashare-toolkit/tree/master/frontend
+    description: Learn how to use the Datashare UI
+    destinations:
+    - DESTINATION_POST_DEPLOY
+  - title: Datashare API Documentation
+    url: https://github.com/GoogleCloudPlatform/datashare-toolkit/tree/master/api
+    description: Learn how to use the Datashare API
+    destinations:
+    - DESTINATION_POST_DEPLOY
+  - title: Latest Documentation # displayed after user clicks launch button
+    url: https://github.com/GoogleCloudPlatform/datashare-toolkit/tree/master
+    description: Additional documentation for this solution
+    destinations:
+    - DESTINATION_POST_DEPLOY
+    ##- DESTINATION_CONFIGURATION
+  support:
+  - title: Support
+    descriptionHtml: We provide limited support on this product.  Please submit a Github issue in our official Github repository.
+    url: https://github.com/GoogleCloudPlatform/datashare-toolkit/issues
+
+input:
+  properties:
+    - name: sourceImage
+      title: Image version
+      enumLabels:
+        '0': 'gcp-financial-services-debian-datashare-20200920'
+    - name: zone
+      title: Zone
+    - name: machineType
+      title: Machine type
+    - name: bootDiskType
+      title: cds-boot-disk type
+      section: BOOT_DISK
+    - name: bootDiskSizeGb
+      title: cds-boot-disk size in GB
+      section: BOOT_DISK
+    - name: network
+      title: Network name
+      section: NETWORKING
+    - name: subnetwork
+      title: Subnetwork name
+      section: NETWORKING
+    - name: externalIP
+      title: External IP
+      tooltip: 'An external IP address associated with this instance. Selecting "None" will result in the instance having no external internet access. <a href="https://cloud.google.com/compute/docs/configure-instance-ip-addresses">Learn more</a>'
+      section: NETWORKING
+    - name: enableTcp80
+      title: Allow HTTP traffic from Internet
+      section: NETWORKING
+    - name: tcp80SourceRanges
+      title: Source IP ranges for HTTP traffic
+      tooltip: 'Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. <a href="https://cloud.google.com/compute/docs/networking#firewalls">Learn more</a>'
+      placeholder: '0.0.0.0/0, 192.169.0.2/24'
+      section: NETWORKING
+    - name: canIpForward
+      title: IP forwarding
+      tooltip: 'Forwarding allows the instance to help route packets. <a href="https://cloud.google.com/compute/docs/networking#canipforward">Learn more</a>'
+      section: NETWORKING
+      level: 1
+    - name: input_datashareGithubReleaseVersion
+      title: Github Datashare Release Version
+    - name: input_gcpRegion
+      title: Google Cloud Platform Region
+      subtext: <a href="https://cloud.google.com/compute/docs/regions-zones#available">Valid Google Cloud Platform regions</a>
+      tooltip: Deploys the Cloud Function, Datashare API and UI to this region; default is us-central1.
+      placeholder: us-central1
+    - name: input_storageBucketLocation
+      title: Google Cloud Platform Storage Bucket location
+      subtext: <a href="https://cloud.google.com/storage/docs/locations">Valid Storage Bucket locations</a>
+      tooltip: Create the storage buckets in the specified region; default is US.
+      placeholder: US
+    - name: useRuntimeConfigWaiter
+      title: Use Google RuntimeConfig Waiter to setup Datashare prereqs.
+      tooltip: Enables the <a href="https://cloud.google.com/deployment-manager/runtime-configurator/create-and-delete-runtimeconfig-resources">RuntimeConfig beta</a> feature that will execute a startup-script in the VM to enable APIs, upload Cloud Function source code and configure Cloud Run.
+      subtext: Enables CloudBuild, IAM, Cloud Run, Cloud Resource Manager APIs, and uploads Datashare Cloud Function to Cloud Storage.
+    - name: deployApiToGke
+      title: Deploy the Datashare API to Cloud Run/GKE
+      tooltip: This creates a<a href="https://cloud.google.com/run/docs/gke/setup">GKE cluster and installs Cloud Run</a> and deploys the Datashare API to this Cloud Run instance.
+      subtext: Creates a GKE cluster, installs Cloud Run and deploys Datashare API to this cluster.
+    - name: gceServiceAccount
+      title: GCP Service Account
+      tooltip: Create a <a href="https://github.com/GoogleCloudPlatform/datashare-toolkit/blob/master/marketplace/PREREQUISITES.md#update-service-account-from-google-cloud-console">new permissions to other service accounts</a> to install all Datashare components.
+      subtext: Include your custom service account here.
+      placeholder: PROJECT@PROJECT_NAME.iam.gserviceaccount.com
+    - name: input_gkeZone
+      title: GKE zone.
+      tooltip: This will create the GKE cluster in the specified zone; default zone is us-central1-a
+      subtext: Create the GKE cluster in the specified zone;
+    - name: input_adminEmail
+      title: Admin Email
+      tooltip: This field is not required. Please ignore.
+      subtext: This is field is not required. Please ignore.
+      placeholder: user@example.com
+    - name: input_oauthClientId
+      title: OAuth Client Id
+      tooltip: <a href="https://console.cloud.google.com/apis/credentials">Create the OAuth client ID.</a>
+      subtext: The OAuth client ID used by the Datashare UI.
+      placeholder: OAUTH_CLIENT_ID
+    - name: input_dataProducers
+      title: Data Producers
+      tooltip: <a href="https://github.com/GoogleCloudPlatform/datashare-toolkit/blob/master/marketplace/DATA_PRODUCERS.md">Review the Data Producers formatting instructions.</a>
+      subtext: Project admins or service accounts that require read-write access to Datashare APIs
+      placeholder: user@example.com
+    - name: input_apiDomainName
+      title: API domain name
+      tooltip: The domain name of your Datashare API that is registered and verified (https is default). Do not enter the protocol (https://).
+      placeholder: api.datashare.domain.com
+    # - name: input_apiStaticIp
+    #  title: Static IP address for API
+    #  tooltip: Create the static IP address (V4) and add it here.
+    #  placeholder: 192.168.0.1
+    - name: input_uiDomainName
+      title: UI domain name
+      tooltip: The domain name of your Datashare UI that is registered and verified (https is default). Do not enter the protocol (https://).
+      placeholder: datashare.domain.com
+  sections:
+    - name: BOOT_DISK
+      title: Boot Disk
+      tooltip: Each instance requires a disk to boot from.
+    - name: NETWORKING
+      title: Networking
+
+runtime:
+  deployingMessage: Deployment can take several minutes to complete.
+  applicationTable:
+    rows:
+      - label: Instance
+        value: '<a href="{{ consoleUrl(outputs().vmSelfLink) }}">{{ outputs().vmName }}</a>'
+      - label: Instance zone
+        value: '{{ properties().zone }}'
+      - label: Instance machine type
+        value: '{{ properties().machineType }}'
+      - label: Cloud Function, Datashare UI and API deployment location
+        value: '{{ properties().input_gcpRegion }}'
+      - label: Datashare Github Release Version
+        value: '{{ properties().input_datashareGithubReleaseVersion }}'
+      - label: Cloud Storage Bucket Location
+        value: '{{ properties().input_storageBucketLocation }}'
+  primaryButton:
+    label: SSH
+    type: TYPE_GCE_VM_SSH
+    action: '{{ outputs().vmSelfLink }}'
+  suggestedActions:
+    - heading: No external IP configured
+      description: 'The VM instance has been configured with no external IP or internet access. Connecting to it directly may not be possible. Consider using a <a href="https://cloud.google.com/compute/docs/instances/connecting-advanced#bastion_host">bastion host</a> to access this VM.'
+      showIf: '{{ !outputs().hasExternalIP }}'
+    - heading: Log on now
+      description: 'Start using the Datashare UI by accessing the URL from the commands below.'
+      snippet: >-
+        gcloud run services list --platform=managed
+      showIf: '{{ properties().input_uiDomainName == "" }}'
+
+    - heading: Remove roles from Service Accounts
+      description: <a href="https://github.com/GoogleCloudPlatform/datashare-toolkit/tree/master/marketplace/README.md#remove-elevated-service-account-permissions">Remove elevated permissions from Cloud Build and Deployment Manager</a>
+    - heading: Get Kubectl credentials
+      description: Get kubectl credentials.
+      showIf: '{{ properties().deployApiToGke }}'
+      snippet: >-
+        gcloud container clusters get-credentials datashare --zone {{ properties().input_gkeZone }}
+
+    - heading: Datashare API Deployed to Cloud Run managed by GKE
+      description: Confirm Datashare deployment, pod and service is running on GKE. Execute the following command from Cloud Shell.
+      showIf: '{{ properties().deployApiToGke }}'
+      snippet: >-
+        kubectl get gw,deploy,po,svc -n datashare-apis
+
+    - heading: Datashare API Service in GKE
+      description: Display the Datashare UI domain name. Execute the following command from Cloud Shell.
+      showIf: '{{ properties().deployApiToGke }}'
+      snippet: >-
+        gcloud run services describe ds-api --cluster datashare --cluster-location {{ properties().input_gkeZone }}   --namespace datashare-apis   --platform gke
+
+    - heading: Get the Datashare IP address
+      description: Execute the following command from Cloud Shell.
+      showIf: '{{ properties().deployApiToGke }}'
+      snippet: >-
+        GATEWAY_IP=`kubectl -n gke-system get svc istio-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}'`; echo $GATEWAY_IP
+
+    - heading: Test the Datashare API
+      description: Execute the following commands from Cloud Shell.  This confirms that the API is running.
+      showIf: '{{ properties().deployApiToGke }}'
+      snippet: >-
+        curl -i -H "Host: ds-api.datashare-apis.example.com" ${GATEWAY_IP}/v1alpha
+
+    - heading: Test access to the Datashare API datasets
+      description: Execute the following commands from Cloud Shell. This confirms the UI will be able to access the API.
+      showIf: '{{ properties().deployApiToGke }}'
+      snippet: >-
+        curl -i -H "Host: ds-api.datashare-apis.example.com" ${GATEWAY_IP}/v1alpha/projects/gcp-financial-services-dev/datasets
+
+    - heading: Do you want to add your domain name to the GKE cluster?
+      description: You must verify that you own the domain first. Execute the following from Cloud Shell.
+      showIf: '{{ properties().deployApiToGke }}'
+      snippet: >-
+        gcloud domains verify YOUR_FQDN
+
+    - heading: Assign a static IP address to your GKE cluster
+      description: Execute the following command from Cloud Shell.
+      showIf: '{{ properties().deployApiToGke }}'
+      snippet: >-
+        gcloud compute addresses create ds-api-static-ip --addresses $GATEWAY_IP --region YOUR_GKE_REGION
+
+    - heading: Assign your domain name to the GKE cluster
+      description: Execute the following command from Cloud Shell. You must own your domain and verify that you own it.
+      showIf: '{{ properties().deployApiToGke }}'
+      snippet: >-
+        gcloud beta run domain-mappings create --service ds-api --domain YOUR_FQDN --cluster datashare --cluster-location {{ properties().input_gkeZone }} --namespace datashare-apis --platform gke
+
+    - heading: Do you want to enable TLS?
+      description: Execute the following command from Cloud Shell.
+      showIf: '{{ properties().deployApiToGke }}'
+      snippet: >-
+        kubectl get kcert -n datashare-apis
+
+    - heading: Confirm TLS is enabled
+      description: Execute the following command from Cloud Shell to confirm TLS is enabled. It should display True under the READY column.
+      showIf: '{{ properties().deployApiToGke }}'
+      snippet: >-
+        kubectl get kcert -n datashare-apis
+
+    - heading: Test the Datashare API with your domain
+      description: Execute the following commands from Cloud Shell.  This confirms that the API is running.
+      showIf: '{{ properties().deployApiToGke }}'
+      snippet: >-
+        curl -i https://YOUR_FQDN/v1alpha
+
+    - heading: Test access to the Datashare API datasets with your domain
+      description: Execute the following commands from Cloud Shell. This confirms the UI will be able to access the API.
+      showIf: '{{ properties().deployApiToGke }}'
+      snippet: >-
+        curl -i -H https://YOUR_FQDN/v1alpha/projects/gcp-financial-services-dev/datasets
+
+    - heading: Deployed with RuntimeConfig beta
+      description: Datashare was deployed using the Google Cloud Platform RuntimeConfig beta release to install dependencies.
+      showIf: '{{ properties().useRuntimeConfigWaiter }}'
+    #- heading: Remove Project Owner role from Compute Engine Service account
+    #  description: Remove the Project Owner role from the compute engine service account in <a href="https://cloud.google.com/shell">Cloud Shell</a>.
+    #  snippet: >-
+    #    $ export PROJECT_NUMBER=`gcloud projects list --filter=$(gcloud config get-value project) --format="value(PROJECT_NUMBER)"`
+    #    $ gcloud projects remove-iam-policy-binding $(gcloud config get-value project) --member="serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com" --role="roles/owner"
+    #  showIf: '{{ properties().useRuntimeConfigWaiter }}'
+
+annotations:
+  autogenSpecType: 'SINGLE_VM'
+  vmImage0: https://www.googleapis.com/compute/v1/projects/gcp-financial-services-public/global/images/gcp-financial-services-debian-datashare-20200920
+
+metadata_version: v1
