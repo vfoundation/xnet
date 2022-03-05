@@ -1,0 +1,10 @@
+project                  = "gcp-financial-services-dev"
+gcp_service_account      = "datashare-deployment-managerv2@gcp-financial-services-dev.iam.gserviceaccount.com"
+datashare_oauth_client_id = "YOUR_VALID_CLIENT_ID"
+datashare_data_producers  = "example@email.com"
+datashare_api_domain_name = "api.ds.com"
+datashare_ui_domain_name = "ds.com"
+
+#deployment_name         = ""
+#gke_zone                = ""
+#storage_bucket_location = ""

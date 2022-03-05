@@ -1,0 +1,24 @@
+imports:
+- path: deploy_ds_api.py
+
+resources:
+- name: build
+  type: deploy_ds_api.py
+  properties:
+    serviceAccountName: ds-api-mgr
+    cloudRunDeployName: ds-api
+    containerTag: dev
+    region: us-central1
+    timeout: 600s
+    datashareGitReleaseTag: master
+    #uiDomainName: ds.com
+  #accessControl:
+  #  gcpIamPolicy:
+  #    bindings:
+  #      - role: roles/iam.serviceAccountAdmin
+  #        members:
+          # The default Deployment Manager service account should retain permissions.
+          # Replace this with a different value if you use DM with different
+          # credentials.
+          #- serviceAccount:{{ env['project_number'] }}@cloudservices.gserviceaccount.com
+   #       - serviceAccount:datashare-deployment-manager@gcp-financial-services-dev.iam.gserviceaccount.com

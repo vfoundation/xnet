@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ds-frontend-ui
+  labels:
+    app: ds-frontend-ui
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      name: http
+  selector:
+    app: ds-frontend-ui
+    version: v1
